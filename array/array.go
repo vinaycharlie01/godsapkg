@@ -15,3 +15,17 @@ func RemoveDuplicates[T comparable](nums []T) int {
 	}
 	return L + 1
 }
+
+func SumDivisibleByK(nums []int, k int) int {
+	hash := make(map[int]int)
+	for _, v := range nums {
+		hash[v]++
+	}
+	sum := 0
+	for n, count := range hash {
+		if count%k == 0 {
+			sum += n * count
+		}
+	}
+	return sum
+}

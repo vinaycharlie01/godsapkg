@@ -33,7 +33,7 @@ func SumDivisibleByK(nums []int, k int) int {
 func Merge(nums1 []int, m int, nums2 []int, n int) {
 	L, R := 0, 0
 	var merged []int
-
+	
 	for L < m && R < n {
 		if nums1[L] < nums2[R] {
 			merged = append(merged, nums1[L])
@@ -52,6 +52,5 @@ func Merge(nums1 []int, m int, nums2 []int, n int) {
 		merged = append(merged, nums2[R])
 		R++
 	}
-
 	copy(nums1, merged)
 }

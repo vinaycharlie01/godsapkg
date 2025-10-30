@@ -2,6 +2,7 @@ package array_test
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 
 	"github.com/vinaycharlie01/godsapkg/array"
@@ -113,6 +114,64 @@ func TestMerge(t *testing.T) {
 			array.Merge(tt.nums1, tt.m, tt.nums2, tt.n)
 			if !reflect.DeepEqual(tt.nums1[:tt.m+tt.n], tt.expected) {
 				t.Errorf("Merge() = %v, want %v", tt.nums1[:tt.m+tt.n], tt.expected)
+			}
+		})
+	}
+}
+
+func TestRotate(t *testing.T) {
+	tests := []struct {
+		name     string
+		items    []int
+		k        int
+		expected []int
+	}{
+		{
+			name:     "rotate by 0",
+			items:    []int{1, 2, 3, 4, 5},
+			k:        0,
+			expected: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:     "rotate by 1",
+			items:    []int{1, 2, 3, 4, 5},
+			k:        1,
+			expected: []int{5, 1, 2, 3, 4},
+		},
+		{
+			name:     "rotate by 2",
+			items:    []int{1, 2, 3, 4, 5},
+			k:        2,
+			expected: []int{4, 5, 1, 2, 3},
+		},
+		{
+			name:     "rotate by length (no change)",
+			items:    []int{1, 2, 3, 4, 5},
+			k:        5,
+			expected: []int{1, 2, 3, 4, 5},
+		},
+		{
+			name:     "rotate by more than length",
+			items:    []int{1, 2, 3, 4, 5},
+			k:        7,
+			expected: []int{4, 5, 1, 2, 3},
+		},
+		{
+			name:     "empty slice",
+			items:    []int{},
+			k:        3,
+			expected: []int{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Make a copy so original test data isn’t mutated across cases
+			input := slices.Clone(tt.items)
+			array.Rotate(input, tt.k)
+
+			if !reflect.DeepEqual(input, tt.expected) {
+				t.Errorf("Rotate(%v, %d) = %v; want %v", tt.items, tt.k, input, tt.expected)
 			}
 		})
 	}

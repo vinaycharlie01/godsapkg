@@ -1,5 +1,7 @@
 package array
 
+import "slices"
+
 // RemoveDuplicates removes duplicates from a sorted slice of any comparable type
 func RemoveDuplicates[T comparable](nums []T) int {
 	if len(nums) == 0 {
@@ -14,6 +16,27 @@ func RemoveDuplicates[T comparable](nums []T) int {
 		}
 	}
 	return L + 1
+}
+
+// Rotate rotates a generic slice to the right by k steps.
+func Rotate[T any](items []T, k int) {
+	n := len(items)
+	if n == 0 {
+		return
+	}
+	k = k % n
+	if k == 0 {
+		return
+	}
+
+	// Reverse the entire slice
+	slices.Reverse(items)
+
+	// Reverse the first k elements
+	slices.Reverse(items[:k])
+
+	// Reverse the remaining elements
+	slices.Reverse(items[k:])
 }
 
 func SumDivisibleByK(nums []int, k int) int {
@@ -33,7 +56,7 @@ func SumDivisibleByK(nums []int, k int) int {
 func Merge(nums1 []int, m int, nums2 []int, n int) {
 	L, R := 0, 0
 	var merged []int
-	
+
 	for L < m && R < n {
 		if nums1[L] < nums2[R] {
 			merged = append(merged, nums1[L])

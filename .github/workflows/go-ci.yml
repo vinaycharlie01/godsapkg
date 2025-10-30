@@ -17,5 +17,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.24.5'
+      - name: Install Mage
+        run: go install github.com/magefile/mage@latest
+      - name: Run Setup
+        run: mage setup
       - name: Run Mage CI
         run: mage ci

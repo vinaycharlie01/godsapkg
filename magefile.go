@@ -21,20 +21,21 @@ func init() {
 	slog.Info("🔧 Logger initialized for Mage tasks")
 }
 
-func CI(ctx context.Context) error {
-	// Step 1: install required Go tools
+func Setup(ctx context.Context) error {
+	//Correct mg.Deps syntax — wrapped function properly
 	pkgs := []string{
 		"github.com/golangci/golangci-lint/cmd/golangci-lint@latest",
 		"github.com/magefile/mage@latest",
 	}
 
-	slog.Info("📦 Installing build dependencies...", "packages", pkgs)
-
-	//Correct mg.Deps syntax — wrapped function properly
 	mg.Deps(func() error {
 		return golang.RunInstall(pkgs)
 	})
+	return nil
+}
 
+func CI(ctx context.Context) error {
+	// Step 1: install required Go tools
 	// Step 2: run tasks in sequence
 	mg.SerialDeps(golang.RunModTasks, golang.RunLint, golang.RunTests)
 

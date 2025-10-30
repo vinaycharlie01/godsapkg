@@ -111,8 +111,8 @@ func TestMerge(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			array.Merge(tt.nums1, tt.m, tt.nums2, tt.n)
-			if !reflect.DeepEqual(tt.nums1[:tt.m+tt.n], tt.expected) {
+			got := array.Merge(tt.nums1, tt.m, tt.nums2, tt.n)
+			if !reflect.DeepEqual(got, tt.expected) {
 				t.Errorf("Merge() = %v, want %v", tt.nums1[:tt.m+tt.n], tt.expected)
 			}
 		})

@@ -1,6 +1,10 @@
 package array
 
-import "slices"
+import (
+	"slices"
+
+	"golang.org/x/exp/constraints"
+)
 
 // RemoveDuplicates removes duplicates from a sorted slice of any comparable type
 func RemoveDuplicates[T comparable](nums []T) int {
@@ -53,10 +57,9 @@ func SumDivisibleByK(nums []int, k int) int {
 	return sum
 }
 
-func Merge(nums1 []int, m int, nums2 []int, n int) {
+func Merge[T constraints.Ordered](nums1 []T, m int, nums2 []T, n int) []T {
 	L, R := 0, 0
-	var merged []int
-
+	var merged []T
 	for L < m && R < n {
 		if nums1[L] < nums2[R] {
 			merged = append(merged, nums1[L])
@@ -66,7 +69,6 @@ func Merge(nums1 []int, m int, nums2 []int, n int) {
 			R++
 		}
 	}
-
 	for L < m {
 		merged = append(merged, nums1[L])
 		L++
@@ -75,5 +77,6 @@ func Merge(nums1 []int, m int, nums2 []int, n int) {
 		merged = append(merged, nums2[R])
 		R++
 	}
-	copy(nums1, merged)
+
+	return merged
 }

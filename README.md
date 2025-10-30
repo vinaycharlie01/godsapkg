@@ -125,11 +125,3 @@ This project is licensed under the MIT License — see `LICENSE` for details.
 If you have questions, open an issue or email: [your.email@example.com](mailto:your.email@example.com)
 
 ---
-
-If you want, I can also:
-
-* Add a `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`
-* Add CI config (GitHub Actions) that runs `go test` and `golangci-lint`
-* Generate a basic `go.mod` and example files for the subpackages
-
-Tell me which of the above to add next and I will create them.

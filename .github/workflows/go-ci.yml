@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Lint & Test
+    name: Lint & Test via Mage
     runs-on: ubuntu-latest
 
     steps:
@@ -23,14 +23,18 @@ jobs:
       - name: Verify dependencies
         run: go mod tidy && go mod verify
 
-      # 👇 Build golangci-lint using the same Go version
+      # 🧰 Install golangci-lint (required for mage Go.Lint target)
       - name: Install golangci-lint
         run: |
           go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
           golangci-lint version
 
-      - name: Run linter
-        run: golangci-lint run --timeout=5m
+      # ⚙️ Install Mage
+      - name: Install Mage
+        run: |
+          go install github.com/magefile/mage@latest
+          mage --version
 
-      - name: Run unit tests
-        run: go test ./... -v -cover -race
+      # 🚀 Run Mage CI pipeline (runs Lint + Tests)
+      - name: Run Mage CI
+        run: mage ci

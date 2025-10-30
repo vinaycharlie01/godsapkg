@@ -16,15 +16,28 @@ import (
 )
 
 func init() {
-	// ✅ Initialize slog globally here once
+	// Initialize slog globally here once
 	logger.Init()
 	slog.Info("🔧 Logger initialized for Mage tasks")
 }
 
-// Run all checks: lint + test
 func CI(ctx context.Context) error {
+	// Step 1: install required Go tools
+	pkgs := []string{
+		"github.com/golangci/golangci-lint/cmd/golangci-lint@latest",
+		"github.com/magefile/mage@latest",
+	}
 
-	mg.SerialDeps(golang.RunLint, golang.RunTests)
-	slog.Info("✅ CI pipeline completed successfully")
+	slog.Info("📦 Installing build dependencies...", "packages", pkgs)
+
+	//Correct mg.Deps syntax — wrapped function properly
+	mg.Deps(func() error {
+		return golang.RunInstall(pkgs)
+	})
+
+	// Step 2: run tasks in sequence
+	mg.SerialDeps(golang.RunModTasks, golang.RunLint, golang.RunTests)
+
+	slog.Info("CI pipeline completed successfully")
 	return nil
 }

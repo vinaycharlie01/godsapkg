@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"time"
+	"strings"
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
@@ -24,17 +24,27 @@ func (Go) Lint(ctx context.Context) error {
 
 // Test runs Go unit tests
 func (Go) Test(ctx context.Context) error {
-	start := time.Now()
-	slog.Info("🧪 Running Go Tests...")
-	if err := golang.RunTests("-v", "-cover"); err != nil {
-		return fmt.Errorf("tests failed: %w", err)
-	}
-	slog.Info("✅ Tests passed", "duration", time.Since(start))
-	return nil
+	// slog.Info("🧪 Running Go Tests...")
+	return fmt.Errorf("tests failed: %w", golang.RunTests("-v", "-cover"))
+
 }
 
 // Clean removes build artifacts (optional)
 func (Go) Clean() error {
 	slog.Info("🧹 Cleaning up workspace...")
 	return sh.RunV("go", "clean", "-testcache")
+}
+
+func (Go) Installpkg(ctx context.Context, pkg string) error {
+
+	if len(pkg) == 0 {
+		return fmt.Errorf("no package")
+		// pkg = []string{"./..."} // default: current module
+	}
+	pkgs := strings.Split(pkg, ",")
+
+	if err := golang.RunInstall(pkgs); err != nil {
+		return err
+	}
+	return nil
 }

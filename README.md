@@ -22,19 +22,19 @@ This repository is meant to be used as a utility library — copy the functions 
 Use `go get` to add the package to your project:
 
 ```bash
-go get github.com/yourusername/godsapkg
+go get github.com/vinaycharlie01/godsapkg
 ```
 
 Then import it:
 
 ```go
-import "github.com/yourusername/godsapkg"
+import "github.com/vinaycharlie01/godsapkg"
 ```
 
 If you prefer to use specific subpackages (recommended):
 
 ```go
-import "github.com/yourusername/godsapkg/strings"
+import "github.com/vinaycharlie01/godsapkg/strings"
 ```
 
 ## Quick start
@@ -46,7 +46,7 @@ package main
 
 import (
     "fmt"
-    "github.com/yourusername/godsapkg/strings"
+    "github.com/vinaycharlie01/godsapkg/strings"
 )
 
 func main() {

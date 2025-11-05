@@ -19,13 +19,19 @@ type Go mg.Namespace
 
 // Lint runs golangci-lint
 func (Go) Lint(ctx context.Context) error {
-	return fmt.Errorf("lint failed: %w", golang.RunLint())
+	if err := golang.RunLint(); err != nil {
+		return fmt.Errorf("lint failed: %w", err)
+	}
+	return nil
 }
 
 // Test runs Go unit tests
 func (Go) Test(ctx context.Context) error {
-	// slog.Info("🧪 Running Go Tests...")
-	return fmt.Errorf("tests failed: %w", golang.RunTests("-v", "-cover"))
+
+	if err := golang.RunTests("-v", "-cover"); err != nil {
+		return fmt.Errorf("tests failed: %w", err)
+	}
+	return nil
 
 }
 

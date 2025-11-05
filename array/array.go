@@ -3,6 +3,7 @@ package array
 import (
 	"slices"
 
+	"github.com/vinaycharlie01/godsapkg/array/model"
 	"golang.org/x/exp/constraints"
 )
 
@@ -79,4 +80,19 @@ func Merge[T constraints.Ordered](nums1 []T, m int, nums2 []T, n int) []T {
 	}
 
 	return merged
+}
+
+func MaxProfit[T model.Number](prices []T) T {
+	if len(prices) == 0 {
+		return 0
+	}
+	prevNumber := prices[0]
+	var maxProfit T
+	for i := 1; i < len(prices); i++ {
+		if prices[i]-prevNumber > 0 {
+			maxProfit += prices[i] - prevNumber
+		}
+		prevNumber = prices[i]
+	}
+	return maxProfit
 }

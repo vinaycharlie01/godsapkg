@@ -214,3 +214,45 @@ func TestMaxProfitInt(t *testing.T) {
 		})
 	}
 }
+
+func TestSingleElementInt(t *testing.T) {
+	tests := []struct {
+		name  string
+		items []int
+		want  int
+	}{
+		{"single element at end", []int{1, 1, 2, 2, 3}, 3},
+		{"single element at beginning", []int{5, 6, 6, 7, 7}, 5},
+		{"single element in middle", []int{2, 2, 3, 4, 4}, 3},
+		{"only one element", []int{42}, 42},
+		{"empty slice", []int{}, 0}, // zero value for int
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := array.SingleElement(tt.items)
+			if got != tt.want {
+				t.Errorf("SingleElement() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSingleElementString(t *testing.T) {
+	tests := []struct {
+		name  string
+		items []string
+		want  string
+	}{
+		{"string case", []string{"a", "a", "b", "b", "z"}, "z"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := array.SingleElement(tt.items)
+			if got != tt.want {
+				t.Errorf("SingleElement() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

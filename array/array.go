@@ -44,6 +44,26 @@ func Rotate[T any](items []T, k int) {
 	slices.Reverse(items[k:])
 }
 
+// SingleElement returns the single non-duplicate element from a sorted slice.
+// Example: [1,1,2,2,3] -> 3
+func SingleElement[T constraints.Ordered](items []T) T {
+	if len(items) == 0 {
+		var zero T
+		return zero // return zero value if empty slice
+	}
+
+	slices.Sort(items)
+
+	for i := 0; i < len(items)-1; i += 2 {
+		if items[i] != items[i+1] {
+			return items[i]
+		}
+	}
+
+	// If all pairs matched, last one is the single element
+	return items[len(items)-1]
+}
+
 func SumDivisibleByK(nums []int, k int) int {
 	hash := make(map[int]int)
 	for _, v := range nums {

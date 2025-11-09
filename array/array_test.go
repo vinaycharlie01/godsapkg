@@ -5,6 +5,7 @@ import (
 	"slices"
 	"testing"
 
+	"github.com/magiconair/properties/assert"
 	"github.com/vinaycharlie01/godsapkg/array"
 )
 
@@ -255,4 +256,72 @@ func TestSingleElementString(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestIntersect(t *testing.T) {
+	tests := []struct {
+		name     string
+		element1 []int
+		element2 []int
+		want     []int
+	}{
+		{
+			name:     "Basic intersection",
+			element1: []int{1, 2, 3, 4},
+			element2: []int{3, 4, 5, 6},
+			want:     []int{3, 4},
+		},
+		{
+			name:     "No intersection",
+			element1: []int{1, 2},
+			element2: []int{3, 4},
+			want:     []int{},
+		},
+		{
+			name:     "With duplicates",
+			element1: []int{1, 2, 2, 3},
+			element2: []int{2, 2, 4},
+			want:     []int{2, 2},
+		},
+		{
+			name:     "Empty first slice",
+			element1: []int{},
+			element2: []int{1, 2, 3},
+			want:     []int{},
+		},
+		{
+			name:     "Empty second slice",
+			element1: []int{1, 2, 3},
+			element2: []int{},
+			want:     []int{},
+		},
+		{
+			name:     "Both empty",
+			element1: []int{},
+			element2: []int{},
+			want:     []int{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := array.Intersect(tt.element1, tt.element2)
+			assert.Equal(t, normalize(tt.want), normalize(got), "Intersect() mismatch")
+		})
+	}
+}
+
+func TestIntersectStrings(t *testing.T) {
+	got := array.Intersect([]string{"apple", "banana", "mango"}, []string{"banana", "grape"})
+	want := []string{"banana"}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Intersect() = %v, want %v", got, want)
+	}
+}
+
+func normalize[T any](s []T) []T {
+	if s == nil {
+		return []T{}
+	}
+	return s
 }

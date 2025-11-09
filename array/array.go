@@ -116,3 +116,18 @@ func MaxProfit[T model.Number](prices []T) T {
 	}
 	return maxProfit
 }
+
+func Intersect[T constraints.Ordered](element1 []T, element2 []T) []T {
+	var result []T
+	hash := map[T]int{}
+	for _, v := range element1 {
+		hash[v]++
+	}
+	for _, v := range element2 {
+		if hash[v] > 0 {
+			result = append(result, v)
+			hash[v]--
+		}
+	}
+	return result
+}

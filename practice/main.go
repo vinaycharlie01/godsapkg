@@ -1,0 +1,3 @@
+Round 1 (Elimination):
+One medium LeetCode question and one multithreading problem — print odd numbers from one thread and even numbers from another, ensuring ordered output like 1 2 3 4 ....
+

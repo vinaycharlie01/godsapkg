@@ -2,6 +2,7 @@ package array
 
 import (
 	"slices"
+	"sort"
 
 	"github.com/vinaycharlie01/godsapkg/array/model"
 	"golang.org/x/exp/constraints"
@@ -132,32 +133,31 @@ func Intersect[T constraints.Ordered](element1 []T, element2 []T) []T {
 	return result
 }
 
-
 func Insert(intervals [][]int, newInterval []int) [][]int {
-    finalSlice := [][]int{}
-    intervals = append(intervals, newInterval)
-    sortSliceUsingStart(intervals)
+	finalSlice := [][]int{}
+	intervals = append(intervals, newInterval)
+	sortSliceUsingStart(intervals)
 
-    start, end := intervals[0][0], intervals[0][1]
-    for idx := 1; idx < len(intervals); idx++{
-        currentStart, currentEnd := intervals[idx][0], intervals[idx][1]
-        if currentStart <= end {
-            if currentEnd > end {
-                end = currentEnd
-            }
-        } else {
-            finalSlice = append(finalSlice, []int{start, end})
-            start, end = currentStart, currentEnd
-        }
-    }
+	start, end := intervals[0][0], intervals[0][1]
+	for idx := 1; idx < len(intervals); idx++ {
+		currentStart, currentEnd := intervals[idx][0], intervals[idx][1]
+		if currentStart <= end {
+			if currentEnd > end {
+				end = currentEnd
+			}
+		} else {
+			finalSlice = append(finalSlice, []int{start, end})
+			start, end = currentStart, currentEnd
+		}
+	}
 
-    finalSlice = append(finalSlice, []int{start, end})
-    return finalSlice
+	finalSlice = append(finalSlice, []int{start, end})
+	return finalSlice
 }
 
 func sortSliceUsingStart(intervals [][]int) [][]int {
-    sort.Slice(intervals, func(a, b int)bool {
-        return intervals[a][0] < intervals[b][0]
-    })
-    return intervals
+	sort.Slice(intervals, func(a, b int) bool {
+		return intervals[a][0] < intervals[b][0]
+	})
+	return intervals
 }

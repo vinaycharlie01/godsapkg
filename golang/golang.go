@@ -105,6 +105,7 @@ func RunBuild(opts BuildOptions) error {
 	if len(opts.Packages) == 0 {
 		opts.Packages = []string{"."}
 	}
+
 	destDir := opts.DestinationDir
 	if destDir == "" {
 		destDir = "dist/binaries"
@@ -133,33 +134,28 @@ func RunBuild(opts BuildOptions) error {
 
 	outPath := filepath.Join(outDir, opts.Binary)
 
-	// ---- build args ----
-	args := []string{
+	// ---- go build args ----
+	buildArgs := []string{
+		"GOOS=" + opts.OS,
+		"GOARCH=" + opts.Arch,
+		"CGO_ENABLED=0",
+		"go",
 		"build",
 		"-ldflags", ldflags,
 		"-o", outPath,
 	}
-	args = append(args, opts.Packages...)
+	buildArgs = append(buildArgs, opts.Packages...)
 
-	// ---- env ----
-	env := []string{
-		"GOOS=" + opts.OS,
-		"GOARCH=" + opts.Arch,
-		"CGO_ENABLED=0",
-	}
-
+	// ---- runtime-only env execution ----
 	if err := execx.Run(
 		context.Background(),
-		"go",
+		"env",
 		false,
-		append([]string{"env"}, env...)...,
+		buildArgs...,
 	); err != nil {
 		return err
 	}
 
-	if err := execx.Run(context.Background(), "go", false, args...); err != nil {
-		return err
-	}
 	slog.Info("✅ Build completed",
 		"output", outPath,
 		"duration", time.Since(start),

@@ -105,6 +105,10 @@ func RunBuild(opts BuildOptions) error {
 	if len(opts.Packages) == 0 {
 		opts.Packages = []string{"."}
 	}
+	destDir := opts.DestinationDir
+	if destDir == "" {
+		destDir = "dist/binaries"
+	}
 
 	slog.Info("🏗️ Building Go binary...",
 		"binary", opts.Binary,
@@ -122,7 +126,7 @@ func RunBuild(opts BuildOptions) error {
 	}
 
 	// ---- output path ----
-	outDir := filepath.Join("dist", "binaries", opts.OS+"_"+opts.Arch)
+	outDir := filepath.Join(destDir, opts.OS+"_"+opts.Arch)
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return err
 	}

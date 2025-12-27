@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -83,5 +85,81 @@ func Run() error {
 		return err
 	}
 	slog.Info("✅ Tests passed", "duration", time.Since(start))
+	return nil
+}
+
+type BuildOptions struct {
+	Binary         string
+	Version        string
+	OS             string
+	Arch           string
+	Debug          bool
+	Packages       []string
+	DestinationDir string // NEW
+}
+
+func RunBuild(opts BuildOptions) error {
+	if opts.Binary == "" {
+		return fmt.Errorf("binary name is required")
+	}
+	if len(opts.Packages) == 0 {
+		opts.Packages = []string{"."}
+	}
+
+	slog.Info("🏗️ Building Go binary...",
+		"binary", opts.Binary,
+		"os", opts.OS,
+		"arch", opts.Arch,
+		"debug", opts.Debug,
+	)
+
+	start := time.Now()
+
+	// ---- ldflags ----
+	ldflags := fmt.Sprintf("-X main.version=%s", opts.Version)
+	if !opts.Debug {
+		ldflags += " -s -w"
+	}
+
+	// ---- output path ----
+	outDir := filepath.Join("dist", "binaries", opts.OS+"_"+opts.Arch)
+	if err := os.MkdirAll(outDir, 0o755); err != nil {
+		return err
+	}
+
+	outPath := filepath.Join(outDir, opts.Binary)
+
+	// ---- build args ----
+	args := []string{
+		"build",
+		"-ldflags", ldflags,
+		"-o", outPath,
+	}
+	args = append(args, opts.Packages...)
+
+	// ---- env ----
+	env := []string{
+		"GOOS=" + opts.OS,
+		"GOARCH=" + opts.Arch,
+		"CGO_ENABLED=0",
+	}
+
+	if err := execx.Run(
+		context.Background(),
+		"go",
+		false,
+		append([]string{"env"}, env...)...,
+	); err != nil {
+		return err
+	}
+
+	if err := execx.Run(context.Background(), "go", false, args...); err != nil {
+		return err
+	}
+	slog.Info("✅ Build completed",
+		"output", outPath,
+		"duration", time.Since(start),
+	)
+
 	return nil
 }
